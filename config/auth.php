@@ -35,13 +35,22 @@ return [
     |
     */
 
+    /*'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
+    ],*/
     'guards' => [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'api' => [
+            'driver' => 'jwt',
+            'provider' => 'users',
+        ],
     ],
-
     /*
     |--------------------------------------------------------------------------
     | User Providers
@@ -59,7 +68,7 @@ return [
     |
     */
 
-    'providers' => [
+    /*'providers' => [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
@@ -69,8 +78,17 @@ return [
         //     'driver' => 'database',
         //     'table' => 'users',
         // ],
+    ],*/
+    'providers' => [
+        'api' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Auth\UserModel::class,
+        ],
+        'users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Auth\UserModel::class,
+        ],
     ],
-
     /*
     |--------------------------------------------------------------------------
     | Resetting Passwords
