@@ -31,20 +31,25 @@ class PaymentSimulator
             ];
         }
 
-        $paymentMethod = $payment->paymentMethod->name;
-        $tariffRecord = PaymentTariffModel::where('payment_method', $paymentMethod)->first();
+        $paymentMethodId = $payment->payment_method_id;
+        $tariffRecord = PaymentTariffModel::where('payment_method_id', $paymentMethodId)->first();
         $tariff = $tariffRecord ? $tariffRecord->tariff : 0;
 
         $tariffAmount = $payment->amount * $tariff;
         $finalAmount = $payment->amount - $tariffAmount;
 
         if (rand(1, 10) <= 7) {
-            $payment->status = 'paid';
             $payment->save();
 
+            $currentBalance = BalanceModel::where('client_id', $payment->client_id)
+                                            ->orderBy('created_at', 'desc')
+                                            ->first()->amount;
+            
+            $newBalance = $currentBalance + $finalAmount;
+            
             BalanceModel::create([
                 'client_id' => $payment->client_id,
-                'amount' => $finalAmount,
+                'amount' => $newBalance,
                 'reason' => 'Payment processed successfully.',
             ]);
 

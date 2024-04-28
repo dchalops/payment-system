@@ -103,25 +103,5 @@ class PaymentController extends Controller
             return ResponseHandler::error('Payment processing failed.', 500);
         }
     }
-
-    public function updatePayment(Request $request, $id)
-    {
-        if ($paymentUpdated) {
-            return ResponseHandler::success(Lang::get('messages.payment_updated'));
-        } else {
-            return ResponseHandler::notFound(Lang::get('messages.payment_not_found'));
-        }
-    }
-
-    public function process(Request $request)
-    {
-        $validatedData = $request->validate([
-            'payment_id' => 'required|integer|exists:payments,id',
-        ]);
-
-        $payment = PaymentModel::find($validatedData['payment_id']);
-        $result = $this->paymentSimulator->process($payment);
-
-        return response()->json($result, $result['success'] ? 200 : 400);
-    }
+    
 }

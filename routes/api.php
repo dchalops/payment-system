@@ -27,7 +27,6 @@ Route::post('providers/login', [ProviderAuthController::class, 'login']);
 
 Route::middleware([AuthenticateJWT::class])->group(function () {
     Route::get('/payments', [PaymentController::class, 'index']);
-    Route::post('/payments', [PaymentController::class, 'store']);
     Route::post('/payments/processPayment', [PaymentController::class, 'createPayment']);
     Route::get('/payments/{id}', [PaymentController::class, 'getPayment']);
 

@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('payment_tariffs', function (Blueprint $table) {
             $table->id();
-            $table->string('payment_method',191)->unique();
+            $table->foreignId('payment_method_id')
+                ->constrained('payment_methods')
+                ->onDelete('cascade');
             $table->decimal('tariff', 5, 4);
             $table->timestamps();
         });
@@ -24,6 +26,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payment_tariffs');
+        Schema::dropIfExists('payment_tariffs'); // Elimina la tabla payment_tariffs
     }
 };
+
