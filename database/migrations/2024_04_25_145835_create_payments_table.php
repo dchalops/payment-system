@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
-            $table->string('client_name');
-            $table->string('client_cpf');
+            $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
             $table->string('description');
             $table->decimal('amount', 10, 2);
             $table->enum('status', ['pendiente', 'pagado', 'vencido', 'fallido']);

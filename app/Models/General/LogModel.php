@@ -1,15 +1,14 @@
 <?php
 
 namespace App\Models\General;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Log extends Model
+class LogModel extends Model
 {
     protected $table = 'logs';
 
-    protected $fillable = ['user_id', 'action', 'description', 'created_at'];
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
+    protected $fillable = ['action', 'description', 'created_at'];
+    
 }

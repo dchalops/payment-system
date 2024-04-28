@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\Genral\LogModel;
+use App\Models\General\LogModel;
 
 class SystemMonitor
 {

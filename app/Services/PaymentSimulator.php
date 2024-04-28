@@ -2,8 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\Payment;
-use App\Models\Balance;
+use App\Models\Payments\PaymentsModel;
+use App\Models\Balance\BalanceModel;
+use App\Models\Payments\AppliedTariffModel;
+use App\Models\Settings\PaymentTariffModel;
 use App\Services\SystemMonitor;
 
 class PaymentSimulator
@@ -15,7 +17,7 @@ class PaymentSimulator
         $this->systemMonitor = $systemMonitor;
     }
 
-    public function process(Payment $payment): array
+    public function process(PaymentsModel $payment): array
     {
         if ($payment->status === 'paid') {
             $this->systemMonitor->logEvent(
@@ -29,19 +31,33 @@ class PaymentSimulator
             ];
         }
 
+        $paymentMethod = $payment->paymentMethod->name;
+        $tariffRecord = PaymentTariffModel::where('payment_method', $paymentMethod)->first();
+        $tariff = $tariffRecord ? $tariffRecord->tariff : 0;
+
+        $tariffAmount = $payment->amount * $tariff;
+        $finalAmount = $payment->amount - $tariffAmount;
+
         if (rand(1, 10) <= 7) {
             $payment->status = 'paid';
             $payment->save();
 
-            Balance::create([
-                'user_id' => $payment->user_id,
-                'amount' => $payment->value,
+            BalanceModel::create([
+                'client_id' => $payment->client_id,
+                'amount' => $finalAmount,
                 'reason' => 'Payment processed successfully.',
+            ]);
+
+            AppliedTariffModel::create([
+                'payment_id' => $payment->id,
+                'original_amount' => $payment->amount,
+                'tariff' => $tariffAmount,
+                'final_amount' => $finalAmount,
             ]);
 
             $this->systemMonitor->logEvent(
                 'Payment Processed',
-                'Payment ID: ' . $payment->id . ' processed successfully.'
+                'Payment ID: ' . $payment->id . ' processed successfully. Tariff applied: ' . $tariffAmount
             );
 
             return [
