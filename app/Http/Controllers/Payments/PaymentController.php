@@ -98,9 +98,9 @@ class PaymentController extends Controller
         $simulationResult = $this->paymentSimulator->process($payment);
 
         if ($simulationResult['success']) {
-            return ResponseHandler::success($payment, 'Payment processed successfully.', 201);
+            return ResponseHandler::success($payment, 'messages.payment_created', 200);
         } else {
-            return ResponseHandler::error('Payment processing failed.', 500);
+            return ResponseHandler::error('messages.payments.payment_not_found.', 500);
         }
     }
     
