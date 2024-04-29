@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
             $table->string('description');
             $table->decimal('amount', 10, 2);
-            $table->enum('status', ['pendiente', 'pagado', 'vencido', 'fallido']);
+            $table->enum('status', ['pending', 'paid', 'defeated', 'failed']);
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('payment_method_id')->constrained('payment_methods');
             $table->timestamps();

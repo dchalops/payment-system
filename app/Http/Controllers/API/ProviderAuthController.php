@@ -18,7 +18,7 @@ class ProviderAuthController extends Controller
             'username' => 'required',
             'password' => 'required',
         ]);
-
+        
         $user = UserModel::where('username', hash('sha256', $request->username))->first();
         
         if (!$user || !Hash::check($request->password, $user->password)) {
